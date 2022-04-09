@@ -111,8 +111,7 @@ class Glaive():
         self.rect.bottom = self.y + self.height
         self.rect.left = self.x
         self.rect.right = self.x + self.width
-        
-
+       
 class Crate():
     """A Crate, full of money, usually dropped by the Money Tower"""
 
@@ -184,8 +183,6 @@ class Bomb():
         self.movement(speed)
         self.explode(speed)
 
-    
-
 class Projectile():
     """It's a projectile, towers throw it"""
     def __init__(self, x, y, angle, pierce, size, speed, Id, rank, img=0):
@@ -241,7 +238,7 @@ class Tower():
         self.x, self.y = x, y
         self.width, self.height = 30, 30
         self.rank = rank
-        Colors = [(200, 0, 0), (0, 0, 200), (200, 200, 0), (0, 200, 200), (100, 100, 100), (0, 200, 0), (200, 200, 200), (100, 150, 200), (0, 0, 0)]
+        Colors = [(200, 0, 0), (0, 0, 200), (200, 200, 0), (0, 200, 200), (100, 100, 100), (0, 200, 0), (200, 200, 200), (100, 150, 200), (0, 0, 0), (100, 8, 100)]
         self.color = Colors[self.rank-1]
         self.range = 100
         self.Projectiles = []
@@ -365,10 +362,18 @@ class Tower():
             self.pierce, self.damage, self.speed, self.range, self.size, self.shotAmount  = 1, 1, 0.5, 100, 20, 1
             self.seeking, self.bulletSpeed, self.camo, self.value, self.fire = False, 5, False, 400, False
             self.lead = True
+
+        elif rank == 10:
+            #Sniper Tower
+            self.descriptions =[[["Night Vision",int(200*self.multi)],["Fast Firing",int(300*self.multi)],["Fastest Firing",int(500*self.multi)],["Semi Automatic", int(1500*self.multi)]],
+                                [["Large Calibre", int(100*self.multi)],["Metal Piercer", int(350*self.multi)],["Heavy Hitter", int(600*self.multi)],["Deadly Damage", int(2000*self.multi)]]]
+            
+            self.pierce, self.damage, self.speed, self.range, self.size, self.shotAmount, self.seeking, self.bulletSpeed, self.camo, self.value, self.fire = 1,1,0.30,900,10,1, False, 10, False, 250, False
+            self.lead = False
             
     def draw(self, gameDisplay, Images, speed):
 
-        if self.rank not in [2, 3, 4, 7, 9]:
+        if self.rank not in [2, 3, 4, 7, 9, 10]:
             pygame.draw.rect(gameDisplay, self.color, (self.x, self.y, self.width, self.height),0)
         elif self.rank == 7:
             gameDisplay.blit(pygame.transform.scale(Images["GlaiveBase"], (self.width, self.height)), (self.x, self.y))
@@ -388,6 +393,8 @@ class Tower():
         elif self.rank == 9:
             img = pygame.transform.rotate(pygame.transform.scale(Images["Cannon"], (self.width-10, self.height)), self.angle)
             gameDisplay.blit(img, (self.x-int(img.get_rect().size[0]/2)+15, self.y-int(img.get_rect().size[1]/2)+10))
+        elif self.rank ==10:
+            pygame.draw.polygon(gameDisplay, (100, 8, 100), points=[(self.x+10, self.y-10), (self.x-10, self.y+30), (self.x+30, self.y+30)])
         else:
             gameDisplay.blit(pygame.transform.rotate(pygame.transform.scale(Images["Flamethrower"], (self.width-5, self.height+10)), self.angle), (self.x, self.y))
     def attack(self, Monsters, speed, Board, Images, gameDisplay):
@@ -437,7 +444,7 @@ class Tower():
                 
         img = [Images["Dart"], Images["Shruk"], Images["FireBall"], 0, 0, 0, 0, 0, Images["Cannonball"]]    
         #Checking to see if there is a monster in range
-        if self.rank in [1,2, 3, 8, 9]  and self.cooldown <= 0:
+        if self.rank in [1,2, 3, 8, 9, 10]  and self.cooldown <= 0:
             for monster in Monsters:
                 if math.sqrt((monster[0].x - self.x)**2 + (monster[0].y - self.y)**2) <= self.range and self.cooldown <= 0:
                     if not monster[0].camo or (monster[0].camo and self.camo):
@@ -759,7 +766,6 @@ class Tower():
                                         else:
                                             self.speed *= 2
 
-
                                 elif self.rank == 2:
                                     #Ninja Monkey Upgrades
                                     if i == 0:
@@ -862,7 +868,6 @@ class Tower():
                                         else:
                                             self.ability.append(["Smoke Bomb",0,750,200])
                                 
-
                                 elif self.rank == 6:
                                     #Money Tower Upgrades
                                     if i == 0:
@@ -970,6 +975,35 @@ class Tower():
                                             self.path = 2
                                         else:
                                             self.ability.append(["Ballistic Nuke",0, 1000,200])
+
+                                elif self.rank == 10:
+                                    #Cannon Tower
+                                    if i == 0:
+                                        if self.currentUpgrade[i] == 0:
+                                            self.camo = True #Night vision
+                                        elif self.currentUpgrade[i] == 1:
+                                            self.speed = self.speed * 2
+                                        elif self.currentUpgrade[i] == 2:
+                                            self.speed = self.speed * 2
+                                            self.path = 1
+                                        else:
+                                            self.speed = self.speed * 2
+                                            self.damage += 1
+                                            
+                                        
+                                    else:
+                                        if self.currentUpgrade[i] == 0:
+                                            self.pierce += 1
+                                        elif self.currentUpgrade[i] == 1:
+                                            self.pierce *= 2
+                                        elif self.currentUpgrade[i] == 2:
+                                            self.shotAmount += 1
+                                            self.path = 2
+                                            self.pierce *= 2
+                                            self.damage+=5
+                                        else:
+                                            self.damage+=10
+                                            self.ability.append(["Big Shot",0, 1000,200])
 
                                 
                                 self.currentUpgrade[i] += 1

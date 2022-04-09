@@ -81,16 +81,15 @@ def setup_Board(board, mapName):
     return board
 
 
-
 class Selection():
     """Class to buy and select towers"""
     def __init__(self):
         self.selected = 0
         self.cooldown = 0
         self.bought = 0
-        self.Costs = [100, 200, 300, 400, 500, 600, 700, 1500, 300]
+        self.Costs = [100, 200, 300, 400, 500, 600, 700, 1500, 300, 250]
         self.names = ["Dart Tower", "Ninja Tower", "Flamethrower", "Ice Tower",
-                      "Explosion Factory", "Money Tower", "Glaive Tower", "Super Tower", "Cannon Tower"]
+                      "Explosion Factory", "Money Tower", "Glaive Tower", "Super Tower", "Cannon Tower", "New Tower"]
         self.selecting = False
         self.step = 0
         
@@ -112,7 +111,7 @@ class Selection():
                             self.selected = i+j*2+1
                             self.cooldown = 20
                     else:
-                        if (i, j) == (0, 0):
+                        if (i, j) == (0, 0) or  (i, j) == (1, 0):
                             if 660+i*100 <= pos[0] <= 660+i*100+60 and 150+j*70 <= pos[1] <= 150+j*70+60 and pressed[0] == 1 and self.selecting == False:
                                 self.selecting = True
                                 self.selected = i+j*2+1+8
@@ -150,7 +149,10 @@ class Selection():
                 elif self.selected == 8:
                     pygame.draw.rect(gameDisplay, (100, 150, 200), (pos[0]-15, pos[1]-15, 30, 30), 0)
                 elif self.selected == 9:
-                    gameDisplay.blit(pygame.transform.scale(Images["Cannon"], (20, 30)), (pos[0]-15, pos[1]-15))
+                    #gameDisplay.blit(pygame.transform.scale(Images["Cannon"], (20, 30)), (pos[0]-15, pos[1]-15))
+                    pygame.draw.polygon(gameDisplay, (100, 8, 100), points=[(pos[0], pos[1]-20), (pos[0]-20, pos[1]+20), (pos[0]+20, pos[1]+20)])
+                elif self.selected == 10:
+                    pygame.draw.polygon(gameDisplay, (100, 8, 100), points=[(pos[0], pos[1]-20), (pos[0]-20, pos[1]+20), (pos[0]+20, pos[1]+20)])
                     
             if self.selected != 0 and 0 <= pos[0] <= 640 and 0 <= pos[1] <= 480 and pressed[0] == 0 and self.selecting == True:
                 if keys[303] != 1 and keys[304] != 1:
@@ -209,10 +211,6 @@ class Selection():
 
         return board, cash
     
-
-
-
-
 
 class Start():
     def __init__(self):
@@ -617,6 +615,10 @@ def game_loop(load, mapName, Diff=""):
                         pygame.draw.rect(gameDisplay, (140, 90, 40), (660+i*100, 150+j*70, 60, 60), 0)
                         pygame.draw.rect(gameDisplay, (210, 180, 140), (660+i*100, 150+j*70, 60, 60), 3)
                         gameDisplay.blit(pygame.transform.scale(Images["Cannon"], (30, 45)), (660+i*100+15, 160+j*70))
+                    elif (i, j) == (1, 0):
+                        pygame.draw.rect(gameDisplay, (140, 90, 40), (660+i*100, 150+j*70, 60, 60), 0)
+                        pygame.draw.rect(gameDisplay, (210, 180, 140), (660+i*100, 150+j*70, 60, 60), 3)
+                        pygame.draw.polygon(gameDisplay, (100, 8, 100), points=[(660+i*100+30, 150+j*70+5), (660+i*100+10, 150+j*70+50), (660+i*100+50, 150+j*70+50)])
 
                     
         #Drawing Lives/Cash
