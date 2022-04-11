@@ -89,7 +89,7 @@ class Selection():
         self.bought = 0
         self.Costs = [100, 200, 300, 400, 500, 600, 700, 1500, 300, 250]
         self.names = ["Dart Tower", "Ninja Tower", "Flamethrower", "Ice Tower",
-                      "Explosion Factory", "Money Tower", "Glaive Tower", "Super Tower", "Cannon Tower", "New Tower"]
+                      "Explosion Factory", "Money Tower", "Glaive Tower", "Super Tower", "Cannon Tower", "Sniper Tower"]
         self.selecting = False
         self.step = 0
         
@@ -149,8 +149,7 @@ class Selection():
                 elif self.selected == 8:
                     pygame.draw.rect(gameDisplay, (100, 150, 200), (pos[0]-15, pos[1]-15, 30, 30), 0)
                 elif self.selected == 9:
-                    #gameDisplay.blit(pygame.transform.scale(Images["Cannon"], (20, 30)), (pos[0]-15, pos[1]-15))
-                    pygame.draw.polygon(gameDisplay, (100, 8, 100), points=[(pos[0], pos[1]-20), (pos[0]-20, pos[1]+20), (pos[0]+20, pos[1]+20)])
+                    gameDisplay.blit(pygame.transform.scale(Images["Cannon"], (20, 30)), (pos[0]-15, pos[1]-15))
                 elif self.selected == 10:
                     pygame.draw.polygon(gameDisplay, (100, 8, 100), points=[(pos[0], pos[1]-20), (pos[0]-20, pos[1]+20), (pos[0]+20, pos[1]+20)])
                     
@@ -763,6 +762,8 @@ def game_loop(load, mapName, Diff=""):
                     gameDisplay.blit(pygame.transform.scale(Images["UnleashHavoc"],(30,30)),(15+55*count,435))
                 elif k == "Ballistic Nuke":
                     gameDisplay.blit(pygame.transform.scale(Images["BallisticNuke"],(35,35)),(55*count+13,432))
+                elif k=="Big Shot":
+                    gameDisplay.blit(pygame.transform.scale(Images["BigShot"],(35,35)),(55*count+13,432))
                     
                 gameDisplay.blit(font_20.render(str(v), True, (0, 0, 0)), (40+55*count, 450))
 

@@ -122,10 +122,8 @@ def genEnemies(wave, Images, mapName):
     elif wave == 24:
         for i in range(5):
             Monsters.append([monsters.Monster(3, wave, True, Images, mapName),30*(i)])
-    elif wave % 25 == 0 and wave != 25:
-        Monsters.append([monsters.Monster(10, wave, False, Images, mapName),30])
     else:
-        for i in range(random.randint(5,15)):
+        for i in range(random.randint(10,wave)):
             n = random.randint(1, 100)
             if n <= 40-wave:
                 Monsters.append([monsters.Monster(1, wave, random.randint(1,10)==1, Images, mapName),random.randint(15,30)*(i)])
@@ -147,4 +145,6 @@ def genEnemies(wave, Images, mapName):
                 Monsters.append([monsters.Monster(9, wave, random.randint(1,10)==1, Images, mapName),random.randint(15,30)*(i)])
             elif n <= 200-wave:
                 Monsters.append([monsters.Monster(10, wave, False, Images, mapName),random.randint(15,30)*i])
+            elif n <= 220-wave:
+                Monsters.append([monsters.Monster(11, wave, False, Images, mapName),random.randint(15,30)*i])
     return Monsters

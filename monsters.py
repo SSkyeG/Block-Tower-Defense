@@ -11,12 +11,14 @@ class Monster():
         #Setting up base variables
         self.rank = rank
         self.step = 0
-        speed = [1.5, 2, 2.5, 3, 3.5, 3, 2.5, 1.2, 2, 1.2]
+        speed = [1.5, 2, 2.5, 3, 3.5, 3, 2.5, 1.2, 2, 1.2, 1.25]
         self.speed = speed[self.rank-1] * (1 + (0.01*(int(wave/150)+1)*wave))
         self.wave = wave
         self.height, self.width = 30, 30
+        if self.rank == 11:
+            self.height, self.width = 40, 40
         self.dead = False
-        Colors = [(200, 0, 0), (0, 0, 200), (0, 200, 0), (255, 255, 0), (255,105,180), (0, 0, 0), (50, 50, 50), (128, 0, 128), (0, 100, 0), (150, 150, 150)]
+        Colors = [(200, 0, 0), (0, 0, 200), (0, 200, 0), (255, 255, 0), (255,105,180), (0, 0, 0), (50, 50, 50), (128, 0, 128), (0, 100, 0), (150, 150, 150), (110, 255, 50)]
         self.color = Colors[self.rank-1]
         self.camo = camo
         self.hit = []
@@ -29,6 +31,8 @@ class Monster():
             self.health = 3
         elif self.rank == 10:
             self.health = 10
+        elif self.rank == 11:
+            self.health = 200
         self.addMonster = []
         self.map = mapName
         #All checkpoints on the map
@@ -76,7 +80,7 @@ class Monster():
     def draw(self, gameDisplay):
 
  
-        if self.rank != 10:    
+        if self.rank != 10 and self.rank != 11:    
             pygame.draw.rect(gameDisplay, self.color, (self.x + int(self.width/5), self.y + int(self.height/5), self.width, self.height), 0)
         else:
             pygame.draw.rect(gameDisplay, self.color, (self.x - int(self.width/3), self.y - int(self.height/3), self.width*2, self.height*2), 0)
@@ -107,7 +111,7 @@ class Monster():
             for i in range(9):
                 pygame.draw.rect(gameDisplay, colors[random.randint(0,2)], (self.x+random.randint(5, 20), self.y+random.randint(5, 20), random.randint(5, 20), random.randint(5, 20)), 0)
 
-        if self.rank != 10:
+        if self.rank != 10 and self.rank != 11:
             pygame.draw.rect(gameDisplay, (100, 100, 100), (self.x + int(self.width/5), self.y + int(self.height/5), self.width, self.height), 2)
         else:
     

@@ -365,10 +365,10 @@ class Tower():
 
         elif rank == 10:
             #Sniper Tower
-            self.descriptions =[[["Night Vision",int(200*self.multi)],["Fast Firing",int(300*self.multi)],["Fastest Firing",int(500*self.multi)],["Semi Automatic", int(1500*self.multi)]],
-                                [["Large Calibre", int(100*self.multi)],["Metal Piercer", int(350*self.multi)],["Heavy Hitter", int(600*self.multi)],["Deadly Damage", int(2000*self.multi)]]]
+            self.descriptions =[[["Night Vision",int(200*self.multi)],["Fast Firing",int(400*self.multi)],["Fastest Firing",int(900*self.multi)],["Semi Automatic", int(2200*self.multi)]],
+                                [["Large Calibre", int(100*self.multi)],["High Calibre", int(350*self.multi)],["Heavy Hitter", int(700*self.multi)],["Rapid Fire", int(2000*self.multi)]]]
             
-            self.pierce, self.damage, self.speed, self.range, self.size, self.shotAmount, self.seeking, self.bulletSpeed, self.camo, self.value, self.fire = 1,1,0.30,900,10,1, False, 10, False, 250, False
+            self.pierce, self.damage, self.speed, self.range, self.size, self.shotAmount, self.seeking, self.bulletSpeed, self.camo, self.value, self.fire = 1,1,0.30,900,10,1, False, 30, False, 250, False
             self.lead = False
             
     def draw(self, gameDisplay, Images, speed):
@@ -437,6 +437,8 @@ class Tower():
                     else:
                         monster[0].ReRank(monster[0].rank - 3)
                 affect[2] = True
+            elif affect[0] == "Big Shot":
+                effect[0] *= 4
                 
             affect[1] -= 1
             if affect[1] <= 0:
@@ -995,9 +997,9 @@ class Tower():
                                         if self.currentUpgrade[i] == 0:
                                             self.pierce += 1
                                         elif self.currentUpgrade[i] == 1:
-                                            self.pierce *= 2
+                                            self.damage+=3
+                                            self.pierce += 1
                                         elif self.currentUpgrade[i] == 2:
-                                            self.shotAmount += 1
                                             self.path = 2
                                             self.pierce *= 2
                                             self.damage+=5
