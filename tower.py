@@ -283,6 +283,7 @@ class Tower():
         Multiplier = [0.8, 1, 1.2]
         Difficulties = ["Easy", "Medium", "Hard"]
         self.multi = Multiplier[Difficulties.index(self.dif)]
+        self.Temp=[]
     
 
         self.description = [[["",0]]*4]*2
@@ -422,9 +423,11 @@ class Tower():
                 self.cash += 1000
                 affect[2] = True
             elif affect[0] == "Complete Reform":
+                if(affect[1]==400):
+                    self.Temp = [self.glaiveCount, self.glaiveRings]
                 self.glaiveCount = 10
                 self.glaiveRings = 3
-                affect[1] = 5
+                #affect[1] = 5
             elif affect[0] == "Unleash Havoc":
                 for i in range(36):
                     self.Projectiles.append(Projectile(self.x+int(self.width/2), self.y+int(self.height/2), i*0.2, self.pierce, self.size, self.bulletSpeed,random.randint(0,1000000), self.rank))
@@ -438,13 +441,25 @@ class Tower():
                         monster[0].ReRank(monster[0].rank - 3)
                 affect[2] = True
             elif affect[0] == "Big Shot":
-                effect[0] *= 4
+                if(affect[1]==300):
+                    self.Temp = [self.pierce, self.shotAmount, self.damage]
+                effect[0] *= 2
+                self.pierce *= 2
+                self.shotAmount =4
+                self.damage *= 2
                 
             affect[1] -= 1
             if affect[1] <= 0:
                 self.effects.pop(self.effects.index(affect))
+                if affect[0] == "Complete Reform":
+                    self.glaiveCount= self.Temp[0]
+                    self.glaiveRings = self.Temp[1]
+                elif affect[0] == "Big Shot":
+                    self.pierce= self.Temp[0]
+                    self.shotAmount = self.Temp[1]
+                    self.damage = self.Temp[2]
                 
-        img = [Images["Dart"], Images["Shruk"], Images["FireBall"], 0, 0, 0, 0, 0, Images["Cannonball"]]    
+        img = [Images["Dart"], Images["Shruk"], Images["FireBall"], 0, 0, 0, 0, 0, Images["Cannonball"], 0]    
         #Checking to see if there is a monster in range
         if self.rank in [1,2, 3, 8, 9, 10]  and self.cooldown <= 0:
             for monster in Monsters:
@@ -491,18 +506,12 @@ class Tower():
                         
                         
                         #print("Self: ", (self.x, self.y), " Monster: ", (monster[0].x, monster[0].y), " ", math.atan2((monster[0].y-self.y),(monster[0].x-self.x)), angle)
-                        if self.rank not in [1, 2, 3, 9]:
-                            if self.shotAmount == 1:
-                                self.Projectiles.append(Projectile(self.x+int(self.width/2), self.y-int(self.height/2), angle, self.pierce, self.size, self.bulletSpeed,random.randint(0,1000000), self.rank))
-                            else:
-                                for i in range(self.shotAmount):
-                                    self.Projectiles.append(Projectile(self.x+int(self.width/2), self.y-int(self.height/2), angle-0.2*(int(self.shotAmount/2)-i), self.pierce, self.size, self.bulletSpeed,random.randint(0,1000000), self.rank))
+                        
+                        if self.shotAmount == 1:
+                            self.Projectiles.append(Projectile(self.x+int(self.width/2), self.y-int(self.height/2), angle, self.pierce, self.size, self.bulletSpeed,random.randint(0,1000000), self.rank, img[self.rank-1]))
                         else:
-                            if self.shotAmount == 1:
-                                self.Projectiles.append(Projectile(self.x+int(self.width/2), self.y-int(self.height/2), angle, self.pierce, self.size, self.bulletSpeed,random.randint(0,1000000), self.rank, img[self.rank-1]))
-                            else:
-                                for i in range(self.shotAmount):
-                                    self.Projectiles.append(Projectile(self.x+int(self.width/2), self.y-int(self.height/2), angle-0.2*(int(self.shotAmount/2)-i), self.pierce, self.size, self.bulletSpeed,random.randint(0,1000000), self.rank, img[self.rank-1]))
+                            for i in range(self.shotAmount):
+                                self.Projectiles.append(Projectile(self.x+int(self.width/2), self.y-int(self.height/2), angle-0.2*(int(self.shotAmount/2)-i), self.pierce, self.size, self.bulletSpeed,random.randint(0,1000000), self.rank, img[self.rank-1]))
 
                         self.cooldown = 50
         else:
@@ -578,7 +587,7 @@ class Tower():
 
         #Glaive tower
         if self.rank == 7:
-            while len(self.Glaives) != self.glaiveCount:
+            while len(self.Glaives) < self.glaiveCount:
                 angle = 0
                 if self.glaiveRings == 1:
                     ring = 1
@@ -604,6 +613,8 @@ class Tower():
                         angle = (currentAngle-(6.25/(count+1))) - 3.25
          
                 self.Glaives.append(Glaive((self.x+15, self.y+20), angle, ring, self.glaiveSpeed, Images["Glaive"]))
+            while len(self.Glaives) > self.glaiveCount:
+                self.Glaives.pop()
 
         for glaive in self.Glaives:
             for monster in Monsters:
@@ -919,7 +930,7 @@ class Tower():
                                             self.glaiveCount += 1
                                             self.path = 2
                                         else:
-                                            self.ability.append(["Complete Reform",0,-1,200])
+                                            self.ability.append(["Complete Reform",0,1000,400])
 
                                 elif self.rank == 8:
                                     #Glaive Tower
@@ -979,7 +990,7 @@ class Tower():
                                             self.ability.append(["Ballistic Nuke",0, 1000,200])
 
                                 elif self.rank == 10:
-                                    #Cannon Tower
+                                    #Sniper Tower
                                     if i == 0:
                                         if self.currentUpgrade[i] == 0:
                                             self.camo = True #Night vision
@@ -1005,7 +1016,7 @@ class Tower():
                                             self.damage+=5
                                         else:
                                             self.damage+=10
-                                            self.ability.append(["Big Shot",0, 1000,200])
+                                            self.ability.append(["Big Shot",0, 1000,300])
 
                                 
                                 self.currentUpgrade[i] += 1
